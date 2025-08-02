@@ -37,3 +37,15 @@ backend/nohup.out
 # Frontend specific  
 frontend/frontend.log
 frontend/nohup.out
+
+# Local documentation (contains sensitive info)
+README.local.md
+README.local
+*.local.md
+
+# Security - Never commit these
+*.key
+*.pem
+*.cert
+secrets/
+credentials/

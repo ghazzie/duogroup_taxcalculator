@@ -34,8 +34,8 @@ A comprehensive full-stack web application for calculating asset depreciation us
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd duotax-calculator
+   git clone https://github.com/ghazzie/duogroup_taxcalculator.git
+   cd duogroup_taxcalculator
    ```
 
 2. **Backend Setup**
@@ -138,9 +138,11 @@ docker-compose -f docker-compose.yml up -d
 
 ### Backend (.env)
 ```
-PORT=5000
+PORT=your_port_number
 NODE_ENV=production
 ```
+
+**Note**: Create a `.env` file in the backend directory with your specific configuration. See `.env.example` for reference.
 
 ### Frontend
 Update the API URL in the frontend code when deploying to production.
