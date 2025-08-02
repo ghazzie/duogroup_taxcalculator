@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "duogroup-taxcalculator",
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "framework": "vite",
+  "installCommand": "echo 'Install handled by buildCommand'",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}

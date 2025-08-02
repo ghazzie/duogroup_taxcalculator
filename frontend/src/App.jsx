@@ -33,6 +33,10 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+  
+  // Show warning if API URL is not configured in production
+  const isProduction = import.meta.env.PROD;
+  const needsBackendConfig = isProduction && !import.meta.env.VITE_API_URL;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -104,6 +108,27 @@ function App() {
             Calculate asset depreciation using various methods for accurate tax planning and financial reporting
           </p>
         </header>
+
+        {/* Backend Configuration Warning */}
+        {needsBackendConfig && (
+          <div style={{
+            background: '#fff3cd',
+            border: '1px solid #ffc107',
+            borderRadius: '8px',
+            padding: '16px',
+            marginBottom: '24px',
+            color: '#856404'
+          }}>
+            <strong>⚠️ Backend Not Configured</strong>
+            <p style={{ margin: '8px 0 0 0' }}>
+              The backend API is not yet deployed. To enable calculations:
+              <ol style={{ marginTop: '8px' }}>
+                <li>Deploy the backend to a service like Render, Railway, or Heroku</li>
+                <li>Set the VITE_API_URL environment variable in Vercel to your backend URL</li>
+              </ol>
+            </p>
+          </div>
+        )}
 
         {/* Calculator Form */}
         <div className="form-container">
