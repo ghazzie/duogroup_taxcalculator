@@ -32,11 +32,12 @@ function App() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+  // Use relative URL for Vercel deployment, fallback to localhost for development
+  const API_URL = import.meta.env.VITE_API_URL || 
+    (import.meta.env.PROD ? '/api' : 'http://localhost:5001/api');
   
-  // Show warning if API URL is not configured in production
-  const isProduction = import.meta.env.PROD;
-  const needsBackendConfig = isProduction && !import.meta.env.VITE_API_URL;
+  // No longer need backend config warning for Vercel deployment
+  const needsBackendConfig = false;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +65,7 @@ function App() {
         requestData.unitsPerYear = unitsPerYear;
       }
 
-      const response = await fetch(`${API_URL}/api/calculate-depreciation`, {
+      const response = await fetch(`${API_URL}/calculate-depreciation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
