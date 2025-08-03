@@ -1,6 +1,6 @@
 // Vercel Serverless Function for Tax Depreciation Calculation
 
-export default function handler(req, res) {
+module.exports = (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -42,8 +42,8 @@ export default function handler(req, res) {
     const life = parseInt(usefulLife);
     const year = parseInt(currentYear);
 
-    if (cost <= 0 || salvage < 0 || life <= 0 || salvage >= cost) {
-      return res.status(400).json({ error: 'Invalid input values' });
+    if (cost <= 0 || salvage < 0 || life <= 0 || salvage > cost) {
+      return res.status(400).json({ error: 'Invalid input values: Asset cost must be positive, salvage value cannot exceed asset cost' });
     }
 
     let depreciation = 0;
@@ -232,4 +232,4 @@ export default function handler(req, res) {
     console.error('Calculation error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-}
+};

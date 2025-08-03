@@ -1,4 +1,4 @@
-// Health check endpoint for the API
+// Test endpoint to verify API is working
 
 module.exports = (req, res) => {
   // Enable CORS
@@ -7,8 +7,9 @@ module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   
   res.status(200).json({ 
-    status: 'OK', 
-    message: 'Tax Depreciation Calculator API is running on Vercel',
+    message: 'API is working!',
+    method: req.method,
+    url: req.url,
     timestamp: new Date().toISOString()
   });
 };
