@@ -65,7 +65,9 @@ function App() {
         requestData.unitsPerYear = unitsPerYear;
       }
 
-      const response = await fetch(`${API_URL}/calculate-depreciation`, {
+      // Try the edge function first, fallback to Node function
+      const endpoint = import.meta.env.PROD ? '/api/calculate' : `${API_URL}/calculate-depreciation`;
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
