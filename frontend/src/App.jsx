@@ -32,9 +32,8 @@ function App() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Use relative URL for Vercel deployment, fallback to localhost for development
-  const API_URL = import.meta.env.VITE_API_URL || 
-    (import.meta.env.PROD ? '/api' : 'http://localhost:5001/api');
+  // Use environment variable for API URL, fallback to relative URL for production
+  const API_URL = import.meta.env.VITE_API_URL || '';
   
   // No longer need backend config warning for Vercel deployment
   const needsBackendConfig = false;
@@ -66,8 +65,7 @@ function App() {
       }
 
       // Try the edge function first, fallback to Node function
-      const endpoint = import.meta.env.PROD ? '/api/calculate' : `${API_URL}/calculate-depreciation`;
-      const response = await fetch(endpoint, {
+      const response = await fetch(`${API_URL}/api/calculate-depreciation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

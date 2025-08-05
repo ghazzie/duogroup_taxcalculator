@@ -1,33 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
+import { NextRequest, NextResponse } from 'next/server';
 
-const app = express();
-const PORT = process.env.PORT || 5001;
-
-// CORS configuration
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // In production, you might want to whitelist specific domains
-    // For now, we'll allow all origins
-    callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-// Middleware
-app.use(cors(corsOptions));
-app.use(express.json());
-
-// Tax depreciation calculation endpoint
-app.post('/api/calculate-depreciation', (req, res) => {
+export async function POST(request: NextRequest) {
   try {
+    const body = await request.json();
     const {
       assetCost,
       salvageValue,
@@ -36,11 +11,11 @@ app.post('/api/calculate-depreciation', (req, res) => {
       currentYear = 1,
       totalUnits = 0,
       unitsPerYear = []
-    } = req.body;
+    } = body;
 
     // Validate inputs
     if (!assetCost || !salvageValue || !usefulLife || !method) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const cost = parseFloat(assetCost);
@@ -48,14 +23,41 @@ app.post('/api/calculate-depreciation', (req, res) => {
     const life = parseInt(usefulLife);
     const year = parseInt(currentYear);
 
-    if (cost <= 0 || salvage < 0 || life <= 0 || salvage >= cost) {
-      return res.status(400).json({ error: 'Invalid input values' });
+    // Detailed validation with specific error messages
+    if (cost <= 0) {
+      return NextResponse.json({ 
+        error: 'Asset cost must be greater than zero. Please enter a positive value for the original cost of the asset.' 
+      }, { status: 400 });
+    }
+    
+    if (salvage < 0) {
+      return NextResponse.json({ 
+        error: 'Salvage value cannot be negative. Please enter zero or a positive value for the expected value at the end of the asset\'s useful life.' 
+      }, { status: 400 });
+    }
+    
+    if (salvage >= cost) {
+      return NextResponse.json({ 
+        error: `Salvage value ($${salvage.toLocaleString()}) must be less than the asset cost ($${cost.toLocaleString()}). The salvage value represents the expected worth of the asset at the end of its useful life, which should be lower than its original cost.` 
+      }, { status: 400 });
+    }
+    
+    if (life <= 0) {
+      return NextResponse.json({ 
+        error: 'Useful life must be at least 1 year. Please enter the number of years the asset will be used.' 
+      }, { status: 400 });
+    }
+    
+    if (year < 1 || year > life) {
+      return NextResponse.json({ 
+        error: `Current year must be between 1 and ${life} (the useful life). You entered year ${year}.` 
+      }, { status: 400 });
     }
 
     let depreciation = 0;
     let accumulatedDepreciation = 0;
     let bookValue = cost;
-    let schedule = [];
+    let schedule: any[] = [];
 
     switch (method) {
       case 'straight-line':
@@ -156,7 +158,7 @@ app.post('/api/calculate-depreciation', (req, res) => {
       case 'units-of-production':
         // Units of Production Method
         if (!totalUnits || totalUnits <= 0) {
-          return res.status(400).json({ error: 'Total units required for units of production method' });
+          return NextResponse.json({ error: 'Total units required for units of production method' }, { status: 400 });
         }
         
         const depreciationPerUnit = (cost - salvage) / totalUnits;
@@ -217,12 +219,12 @@ app.post('/api/calculate-depreciation', (req, res) => {
         break;
 
       default:
-        return res.status(400).json({ error: 'Invalid depreciation method' });
+        return NextResponse.json({ error: 'Invalid depreciation method' }, { status: 400 });
     }
 
     const currentYearData = schedule[year - 1] || schedule[schedule.length - 1];
 
-    res.json({
+    return NextResponse.json({
       method,
       assetCost: cost,
       salvageValue: salvage,
@@ -236,37 +238,11 @@ app.post('/api/calculate-depreciation', (req, res) => {
 
   } catch (error) {
     console.error('Calculation error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-});
+}
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Tax Depreciation Calculator API is running' });
-});
-
-// Serve static files from the frontend build directory
-const frontendPath = path.join(__dirname, '../frontend/dist');
-console.log('Frontend path:', frontendPath);
-console.log('Frontend directory exists:', require('fs').existsSync(frontendPath));
-
-app.use(express.static(frontendPath));
-
-// Catch all routes and serve the frontend (excluding API routes)
-app.get('*', (req, res) => {
-  console.log('Handling request for:', req.path);
-  // Don't serve index.html for API routes
-  if (req.path.startsWith('/api')) {
-    return res.status(404).json({ error: 'API endpoint not found' });
-  }
-  
-  const indexPath = path.join(frontendPath, 'index.html');
-  console.log('Serving index.html from:', indexPath);
-  console.log('Index.html exists:', require('fs').existsSync(indexPath));
-  
-  res.sendFile(indexPath);
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+export async function GET() {
+  return NextResponse.json({ status: 'OK', message: 'Tax Depreciation Calculator API is running' });
+}

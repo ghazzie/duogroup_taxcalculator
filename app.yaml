@@ -1,0 +1,50 @@
+# Digital Ocean App Platform Configuration
+# This file defines how to deploy the Tax Depreciation Calculator
+
+name: duotax-calculator
+
+# Define the services
+services:
+  # Backend API Service
+  - name: api
+    environment_slug: node-js
+    github:
+      branch: digitalocean-deploy
+      deploy_on_push: true
+      repo: ghazzie/duogroup_taxcalculator
+    source_dir: backend
+    build_command: npm install
+    run_command: npm start
+    http_port: 5001
+    # Environment variables for backend
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "5001"
+    # Routes for the API
+    routes:
+      - path: /api
+
+# Static site for frontend
+static_sites:
+  - name: frontend
+    environment_slug: node-js
+    github:
+      branch: digitalocean-deploy
+      deploy_on_push: true
+      repo: ghazzie/duogroup_taxcalculator
+    source_dir: frontend
+    build_command: npm install && npm run build
+    output_dir: dist
+    # Environment variables for frontend
+    envs:
+      - key: VITE_API_URL
+        value: ${APP_URL}/api
+    # Catch all routes for React
+    routes:
+      - path: /
+    catchall_document: index.html
+
+# Region configuration
+region: nyc
