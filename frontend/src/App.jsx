@@ -32,8 +32,8 @@ function App() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Use environment variable for API URL, fallback to localhost for development
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+  // Use environment variable for API URL, fallback to relative URL for production
+  const API_URL = import.meta.env.VITE_API_URL || '';
   
   // No longer need backend config warning for Vercel deployment
   const needsBackendConfig = false;
