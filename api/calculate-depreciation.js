@@ -1,6 +1,6 @@
 // Vercel Serverless Function for Tax Depreciation Calculation
 
-module.exports = (req, res) => {
+export default function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -232,4 +232,4 @@ module.exports = (req, res) => {
     console.error('Calculation error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-};
+}
