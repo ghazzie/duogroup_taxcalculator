@@ -82,6 +82,53 @@ export default function Home() {
     setLoading(true);
     setError('');
 
+    // Client-side validation with helpful messages
+    const cost = parseFloat(formData.assetCost);
+    const salvage = parseFloat(formData.salvageValue);
+    const life = parseInt(formData.usefulLife);
+    const year = parseInt(formData.currentYear);
+
+    // Check for invalid numbers
+    if (isNaN(cost) || isNaN(salvage) || isNaN(life) || isNaN(year)) {
+      setError('Please ensure all fields contain valid numbers.');
+      setLoading(false);
+      return;
+    }
+
+    // Validate asset cost
+    if (cost <= 0) {
+      setError('Asset cost must be greater than zero. Please enter the original purchase price of the asset.');
+      setLoading(false);
+      return;
+    }
+
+    // Validate salvage value
+    if (salvage < 0) {
+      setError('Salvage value cannot be negative. Enter zero if the asset will have no value at the end of its useful life.');
+      setLoading(false);
+      return;
+    }
+
+    if (salvage >= cost) {
+      setError(`Salvage value ($${salvage.toLocaleString()}) must be less than the asset cost ($${cost.toLocaleString()}). The salvage value is the estimated value of the asset at the end of its useful life, which should be lower than what you paid for it.`);
+      setLoading(false);
+      return;
+    }
+
+    // Validate useful life
+    if (life <= 0) {
+      setError('Useful life must be at least 1 year. Enter the number of years you expect to use this asset.');
+      setLoading(false);
+      return;
+    }
+
+    // Validate current year
+    if (year < 1 || year > life) {
+      setError(`Current year must be between 1 and ${life} (the useful life you specified). You entered year ${year}.`);
+      setLoading(false);
+      return;
+    }
+
     try {
       // Prepare units array if using units of production method
       const requestData: any = { ...formData };
@@ -289,8 +336,20 @@ export default function Home() {
             </div>
 
             {error && (
-              <div className="mt-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-center">
-                {error}
+              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">Validation Error</h3>
+                    <div className="mt-1 text-sm text-red-700">
+                      {error}
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </form>

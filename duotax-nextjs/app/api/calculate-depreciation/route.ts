@@ -23,8 +23,35 @@ export async function POST(request: NextRequest) {
     const life = parseInt(usefulLife);
     const year = parseInt(currentYear);
 
-    if (cost <= 0 || salvage < 0 || life <= 0 || salvage >= cost) {
-      return NextResponse.json({ error: 'Invalid input values' }, { status: 400 });
+    // Detailed validation with specific error messages
+    if (cost <= 0) {
+      return NextResponse.json({ 
+        error: 'Asset cost must be greater than zero. Please enter a positive value for the original cost of the asset.' 
+      }, { status: 400 });
+    }
+    
+    if (salvage < 0) {
+      return NextResponse.json({ 
+        error: 'Salvage value cannot be negative. Please enter zero or a positive value for the expected value at the end of the asset\'s useful life.' 
+      }, { status: 400 });
+    }
+    
+    if (salvage >= cost) {
+      return NextResponse.json({ 
+        error: `Salvage value ($${salvage.toLocaleString()}) must be less than the asset cost ($${cost.toLocaleString()}). The salvage value represents the expected worth of the asset at the end of its useful life, which should be lower than its original cost.` 
+      }, { status: 400 });
+    }
+    
+    if (life <= 0) {
+      return NextResponse.json({ 
+        error: 'Useful life must be at least 1 year. Please enter the number of years the asset will be used.' 
+      }, { status: 400 });
+    }
+    
+    if (year < 1 || year > life) {
+      return NextResponse.json({ 
+        error: `Current year must be between 1 and ${life} (the useful life). You entered year ${year}.` 
+      }, { status: 400 });
     }
 
     let depreciation = 0;
