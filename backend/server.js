@@ -247,11 +247,24 @@ app.get('/api/health', (req, res) => {
 
 // Serve static files from the frontend build directory
 const frontendPath = path.join(__dirname, '../frontend/dist');
+console.log('Frontend path:', frontendPath);
+console.log('Frontend directory exists:', require('fs').existsSync(frontendPath));
+
 app.use(express.static(frontendPath));
 
-// Catch all routes and serve the frontend
+// Catch all routes and serve the frontend (excluding API routes)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
+  console.log('Handling request for:', req.path);
+  // Don't serve index.html for API routes
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  
+  const indexPath = path.join(frontendPath, 'index.html');
+  console.log('Serving index.html from:', indexPath);
+  console.log('Index.html exists:', require('fs').existsSync(indexPath));
+  
+  res.sendFile(indexPath);
 });
 
 app.listen(PORT, () => {
