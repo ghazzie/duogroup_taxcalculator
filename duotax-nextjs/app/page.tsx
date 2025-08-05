@@ -197,7 +197,7 @@ export default function Home() {
                   value={formData.assetCost}
                   onChange={handleInputChange}
                   placeholder="100000"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500"
                   required
                   min="0"
                   step="0.01"
@@ -215,7 +215,7 @@ export default function Home() {
                   value={formData.salvageValue}
                   onChange={handleInputChange}
                   placeholder="10000"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500"
                   required
                   min="0"
                   step="0.01"
@@ -233,7 +233,7 @@ export default function Home() {
                   value={formData.usefulLife}
                   onChange={handleInputChange}
                   placeholder="10"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500"
                   required
                   min="1"
                   step="1"
@@ -249,7 +249,7 @@ export default function Home() {
                   name="method"
                   value={formData.method}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                 >
                   <option value="straight-line">Straight Line</option>
                   <option value="declining-balance">Double Declining Balance</option>
@@ -274,7 +274,7 @@ export default function Home() {
                   value={formData.currentYear}
                   onChange={handleInputChange}
                   placeholder="1"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500"
                   required
                   min="1"
                   step="1"
@@ -294,7 +294,7 @@ export default function Home() {
                       value={formData.totalUnits}
                       onChange={handleInputChange}
                       placeholder="100000"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-500"
                       required
                       min="1"
                       step="1"
@@ -314,7 +314,7 @@ export default function Home() {
                           value={formData[`unitsYear${year}`]}
                           onChange={handleInputChange}
                           placeholder={`Year ${year}`}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder:text-gray-500"
                           min="0"
                           step="1"
                         />
