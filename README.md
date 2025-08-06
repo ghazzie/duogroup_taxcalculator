@@ -1,203 +1,159 @@
-# DuoGroup Tax Depreciation Calculator
+# Tax Depreciation Calculator - Next.js Version
 
-A comprehensive full-stack web application for calculating asset depreciation using various methods for tax purposes. Built with React (Vite) for the frontend and Express.js for the backend.
+A modern, unified tax depreciation calculator built with Next.js, combining frontend and backend into a single deployable application.
 
 ## Features
 
-- Calculate depreciation using seven methods:
-  - Straight-line depreciation
-  - Double declining balance (200%)
+- **Multiple Depreciation Methods**:
+  - Straight Line
+  - Double Declining Balance
+  - Sum of Years' Digits
   - 150% Declining Balance
-  - Sum of years' digits
   - Units of Production
   - MACRS 5-Year Property
   - MACRS 7-Year Property
-- Real-time calculation results
-- Complete depreciation schedule visualization
-- Responsive, modern UI design
-- RESTful API backend
 
-## Tech Stack
+- **Interactive Visualizations**: 
+  - Book value over time (line chart)
+  - Annual depreciation (bar chart)
+  - Detailed depreciation schedule table
 
-- **Frontend**: React 18, Vite, Recharts, TailwindCSS
-- **Backend**: Node.js, Express.js, CORS
-- **Deployment**: Docker, Netlify-ready
+- **Modern Tech Stack**:
+  - Next.js 15 with App Router
+  - TypeScript for type safety
+  - Tailwind CSS for styling
+  - Recharts for data visualization
+  - API Routes for backend logic
 
-## Prerequisites
+## Getting Started
 
-- Node.js 18+ and npm
-- Docker and Docker Compose (optional, for containerized deployment)
+### Prerequisites
 
-## Installation & Setup
+- Node.js 18+ 
+- npm or yarn
 
-### Local Development
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/ghazzie/duogroup_taxcalculator.git
-   cd duogroup_taxcalculator
-   ```
-
-2. **Backend Setup**
-   ```bash
-   cd backend
-   npm install
-   npm run dev
-   ```
-   The backend server will start on http://localhost:5001
-
-3. **Frontend Setup** (in a new terminal)
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-   The frontend will open automatically at http://localhost:3015
-
-### Docker Deployment
-
-Run the entire stack with Docker Compose:
+### Installation
 
 ```bash
-docker-compose up --build
+# Clone the repository
+git clone [your-repo-url]
+
+# Navigate to the Next.js app
+cd duotax-nextjs
+
+# Install dependencies
+npm install
 ```
 
-This will start:
-- Backend API at http://localhost:5001
-- Frontend at http://localhost:3015
+### Development
+
+```bash
+# Start the development server
+npm run dev
+
+# The app will be available at http://localhost:3000
+```
+
+### Production Build
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
 
 ## API Endpoints
 
-### POST /api/calculate-depreciation
-Calculate depreciation for an asset.
+### Calculate Depreciation
+- **POST** `/api/calculate-depreciation`
+- **Body**:
+  ```json
+  {
+    "assetCost": "100000",
+    "salvageValue": "10000",
+    "usefulLife": "5",
+    "method": "straight-line",
+    "currentYear": "1"
+  }
+  ```
 
-**Request Body:**
-```json
-{
-  "assetCost": 100000,
-  "salvageValue": 10000,
-  "usefulLife": 10,
-  "method": "straight-line",
-  "currentYear": 1
-}
-```
-
-**Response:**
-```json
-{
-  "method": "straight-line",
-  "assetCost": 100000,
-  "salvageValue": 10000,
-  "usefulLife": 10,
-  "currentYear": 1,
-  "currentYearDepreciation": 9000,
-  "accumulatedDepreciation": 9000,
-  "bookValue": 91000,
-  "schedule": [...]
-}
-```
-
-### GET /api/health
-Health check endpoint.
+### Health Check
+- **GET** `/api/calculate-depreciation`
+- Returns: `{"status":"OK","message":"Tax Depreciation Calculator API is running"}`
 
 ## Deployment
 
-### Netlify (Frontend)
+### Vercel (Recommended)
 
-1. Build the frontend:
-   ```bash
-   cd frontend
-   npm run build
-   ```
-
-2. Deploy to Netlify:
-   - Connect your GitHub repository to Netlify
-   - Set build command: `npm run build`
-   - Set publish directory: `dist`
-   - Update the API URL in `netlify.toml` to point to your deployed backend
-
-### Backend Deployment
-
-The backend can be deployed to any Node.js hosting service (Heroku, Railway, Render, etc.):
-
-1. Set environment variables:
-   - `PORT`: Server port (default: 5000)
-   - `NODE_ENV`: Set to "production"
-
-2. Deploy using the platform's CLI or GitHub integration
-
-### Docker Deployment
-
-For production Docker deployment:
+1. Push to GitHub
+2. Import to Vercel
+3. Deploy automatically
 
 ```bash
-docker-compose -f docker-compose.yml up -d
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+```
+
+### Digital Ocean App Platform
+
+1. Push to GitHub
+2. Create new app in Digital Ocean
+3. Select Node.js buildpack
+4. Deploy
+
+### Docker
+
+```dockerfile
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
 ```
 
 ## Environment Variables
 
-### Backend (.env)
-```
-PORT=your_port_number
-NODE_ENV=production
-```
-
-**Note**: Create a `.env` file in the backend directory with your specific configuration. See `.env.example` for reference.
-
-### Frontend
-Update the API URL in the frontend code when deploying to production.
+No environment variables required! The API is integrated directly into the Next.js app.
 
 ## Project Structure
 
 ```
-duotax-calculator/
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   └── index.css
-│   ├── Dockerfile
-│   ├── netlify.toml
-│   └── package.json
-├── backend/
-│   ├── server.js
-│   ├── Dockerfile
-│   ├── .env
-│   └── package.json
-├── docker-compose.yml
+duotax-nextjs/
+├── app/
+│   ├── api/
+│   │   └── calculate-depreciation/
+│   │       └── route.ts        # API endpoint
+│   ├── globals.css            # Global styles
+│   ├── layout.tsx             # Root layout
+│   └── page.tsx               # Main calculator page
+├── public/                    # Static assets
+├── package.json
 └── README.md
 ```
 
-## Depreciation Methods
+## Benefits of Next.js Version
 
-1. **Straight-Line**: Equal depreciation each year
-   - Formula: (Cost - Salvage Value) / Useful Life
-
-2. **Double Declining Balance (200%)**: Accelerated depreciation
-   - Formula: Book Value × (2 / Useful Life)
-
-3. **150% Declining Balance**: Moderate accelerated depreciation
-   - Formula: Book Value × (1.5 / Useful Life)
-
-4. **Sum of Years' Digits**: Accelerated depreciation
-   - Formula: (Cost - Salvage) × (Remaining Life / Sum of Years)
-
-5. **Units of Production**: Based on actual usage
-   - Formula: (Cost - Salvage) / Total Units × Units Used
-
-6. **MACRS 5-Year**: IRS standard for computers, vehicles
-   - Uses predetermined percentages over 6 years
-
-7. **MACRS 7-Year**: IRS standard for office furniture
-   - Uses predetermined percentages over 8 years
+1. **Single Deployment**: No separate frontend/backend
+2. **No CORS Issues**: API and UI on same domain
+3. **Better Performance**: Server-side rendering available
+4. **Simpler Development**: One `npm run dev` command
+5. **Cost Effective**: One service instead of two
+6. **Type Safety**: Full TypeScript support
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
 ## License
